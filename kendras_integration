@@ -1,0 +1,54 @@
+import boto3
+
+# Initialize Boto3 client for Kendra
+kendra = boto3.client('kendra', region_name='us-west-2')
+
+# Define your S3 bucket and role
+s3_bucket_name = 'habit-tracking-app-bucket'
+iam_role_arn = 'arn:aws:iam::123456789012:role/KendraRole'
+
+# Create a data source
+response = kendra.create_data_source(
+    Name='HabitTrackingAppDocuments',
+    IndexId='index-1234567890',
+    Type='S3',
+    Configuration={
+        'S3Configuration': {
+            'BucketName': s3_bucket_name,
+            'InclusionPrefixes': ['habits/']
+        }
+    },
+    RoleArn=iam_role_arn,
+    Description='Documents related to the habit tracking app on blockchain',
+    Schedule='cron(0 12 * * ? *)'  # Example: Run every day at 12 PM UTC
+)
+
+data_source_id = response['Id']
+print(f'Data Source ID: {data_source_id}')
+
+# Sync the data source
+kendra.start_data_source_sync_job(
+    Id=data_source_id,
+    IndexId='index-1234567890'
+)
+
+
+# Define your query
+query_text = 'How does the habit tracking app use blockchain technology?'
+
+# Query the index
+response = kendra.query(
+    IndexId='index-1234567890',
+    QueryText=query_text,
+)
+
+# Process the response
+for result in response['ResultItems']:
+    if result['Type'] == 'DOCUMENT':
+        document_title = result['DocumentTitle']['Text']
+        document_excerpt = result['DocumentExcerpt']['Text']
+        document_uri = result['DocumentURI']
+        print(f'Title: {document_title}')
+        print(f'Excerpt: {document_excerpt}')
+        print(f'URI: {document_uri}\n')
+
