@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloom</title>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+    <canvas class="draw"></canvas>
+    <div class="heading" id="heading">
+        <h2>
+        <span>
+            Cultivate your
+        </span>
+        <span>
+            personal growth
+        </span>
+        <span>
+            with Bloom
+        </span>
+    </h2>
+    </div>
+
+
+    <div class="nav-bar">
+        <p>Services</p>
+        <p>Work</p>
+        <p>About</p>
+        <p>Start Page</p>
+        <p class="contact">Tracker</p>
+    </div>
+
+    <hr>
+
+    <div class="invisible-content" id="invisibleContent">
+        <h2>Bloom, a place to keep your</h2>
+        
+        <h2>world productive</h2>
+            
+    </div>
+
+    <div id="container">
+        <ul id="habit-ul">
+        </ul>
+    </div>
+
+    <script> 
+        const container = document.getElementById('container');
+
+
+
+        document.addEventListener('keydown', (event) => {
+            if (12 == 13) {
+                event.preventDefault();
+                console.log('pressed')
+        
+                
+                const newHabitElement = document.createElement('li');
+                
+                newHabitElement.classList.add('habit'); 
+        
+        
+                const habitLink = document.createElement('a');
+        
+                const habitTitle = document.createElement('input');
+                habitTitle.type = 'text';
+                habitTitle.contentEditable = 'true'; 
+                habitTitle.placeholder = "Enter habit name ...";
+                habitTitle.classList.add('habit-title');
+
+        
+                const stakeLabel = document.createElement('p');
+                stakeLabel.textContent = 'Amount at Stake (ETH):';
+                stakeLabel.classList.add('stake-label')
+        
+                const stakeInput = document.createElement('input');
+                stakeInput.type = 'text';
+                stakeInput.placeholder = "Enter ETH value ...";
+                stakeInput.contentEditable = 'true'; 
+        
+                const completionLabel = document.createElement('p');
+                completionLabel.textContent = 'When to complete habit by:';
+                completionLabel.classList.add('completion-label');
+        
+                const completionDate = document.createElement('input');
+                completionDate.textContent = '(enter date)'; 
+                completionDate.type = 'date';
+                completionDate.placeholder = "Enter date ...";
+                completionDate.contentEditable = 'true'; 
+        
+                const createHabitButton = document.createElement('button');
+                createHabitButton.classList.add('create-habit-button');
+
+                const createHabitIcon = document.createElement('i');
+                createHabitIcon.classList.add("fas");
+                createHabitIcon.classList.add("fa-plus");
+                createHabitIcon.id = "habit-icon";
+
+                createHabitButton.appendChild(createHabitIcon);
+        
+                const habitFinished = document.createElement('button');
+                habitFinished.classList.add('habit-finished-button');
+
+                const habitFinishedIcon = document.createElement('i');
+                habitFinishedIcon.classList.add("fas");
+                habitFinishedIcon.classList.add("fa-check");
+                
+                habitFinished.appendChild(habitFinishedIcon);
+
+        
+        
+        
+                // Append child elements to the anchor and the list item
+                habitLink.appendChild(habitTitle);
+                habitLink.appendChild(stakeLabel);
+                habitLink.appendChild(stakeInput);
+                habitLink.appendChild(completionLabel);
+                habitLink.appendChild(completionDate);
+                habitLink.appendChild(createHabitButton);
+                habitLink.appendChild(habitFinished);
+        
+
+                newHabitElement.appendChild(habitLink);
+
+        
+                document.getElementById('habit-ul').appendChild(newHabitElement);
+        
+                function saveHabitInfo(habitElement) {
+                    
+                  const habitData = {
+                    title: habitTitle.value,
+                    stake: stakeInput.value, // Use class selector for stake input
+                    completionDate: completionDate.value,
+                  };
+        
+                  const habitDataJSON = JSON.stringify(habitData);
+        
+                  // Get existing habits from local storage or create an empty array
+                  let storedHabits = localStorage.getItem('habits') || '[]';
+                  storedHabits = JSON.parse(storedHabits);
+        
+                  storedHabits.push(habitDataJSON);
+        
+                  localStorage.setItem('habits', JSON.stringify(storedHabits));
+                }
+        
+                createHabitButton.addEventListener('click', () => {
+                    console.log(newHabitElement);
+                  saveHabitInfo(newHabitElement);
+                  // (Optional) Clear the habit content after saving
+                });
+        
+            }
+        });
+        </script>
+
+
+
+
+
+
+</body>
+</html>
